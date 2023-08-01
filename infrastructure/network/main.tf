@@ -37,3 +37,17 @@ module "vpc" {
     Environment = "dev"
   }
 }
+
+resource "tfe_workspace_run" "A" {
+  workspace_id = data.tfe_workspace.ws["3-chain-A"].id
+
+  apply {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+
+  destroy {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+}

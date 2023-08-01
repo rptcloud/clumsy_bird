@@ -1,13 +1,17 @@
-resource "tfe_project" "run-triggers" {
+## Creating Project
+
+resource "tfe_project" "clumsy_bird" {
   name = "Clumsy Bird"
 }
+
+## Creating Workspaces
 
 resource "tfe_workspace" "clumsy-bird-network" {
   name           = "clumsy-bird-network"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
-  project_id     = tfe_project.run-triggers.id
+  project_id     = tfe_project.clumsy_bird.id
 
   working_directory = "infrastructure/network"
 
@@ -29,7 +33,7 @@ resource "tfe_workspace" "clumsy-bird-compute" {
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
-  project_id     = tfe_project.run-triggers.id
+  project_id     = tfe_project.clumsy_bird.id
 
   working_directory = "infrastructure/compute"
 
@@ -41,6 +45,26 @@ resource "tfe_workspace" "clumsy-bird-compute" {
 
   tag_names = ["multispace:compute"]
 }
+
+resource "tfe_workspace" "chain-runner" {
+  name           = "clumsy-bird-chain-runner"
+  auto_apply     = true
+  queue_all_runs = false
+  force_delete   = true
+  project_id     = tfe_project.clumsy_bird.id
+
+  tag_names = ["multispace:chain-runner"]
+
+  working_directory = "infrstructure/chain"
+
+  vcs_repo {
+    identifier         = "rptcloud/clumsy_bird"
+    ingress_submodules = false
+    oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
+  }
+}
+
+## Creating Variables and Variable Sets
 
 resource "tfe_variable_set" "aws-creds" {
   name = "AWS Creds - Clumsy Bird"
@@ -82,26 +106,14 @@ resource "tfe_variable" "compute-upstream-workspaces" {
   category     = "terraform"
   hcl          = true
   key          = "upstream_workspaces"
-  value        = jsonencode([
+  value = jsonencode([
     "${tfe_workspace.clumsy-bird-network.name}",
-    ])
+  ])
 }
 
-resource "tfe_workspace_run" "compute" {
-  workspace_id = tfe_workspace.clumsy-bird-network.id
-  depends_on = [tfe_workspace.clumsy-bird-network]
-
-  apply {
-    # Fire and Forget
-    wait_for_run = false
-    # auto-apply
-    manual_confirm = true
-  }
-
-  destroy {
-    # Wait for destroy before doing anything else
-    wait_for_run = true
-    # auto-apply
-    manual_confirm = true
-  }
+resource "tfe_variable" "chain-runner-tfc_org" {
+  category     = "terraform"
+  key          = "tfc_org"
+  value        = var.tfc_org
+  workspace_id = tfe_workspace.chain-runner.id
 }
