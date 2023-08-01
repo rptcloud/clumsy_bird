@@ -96,7 +96,7 @@ resource "aws_instance" "clumsy_bird" {
   instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = element(data.tfe_outputs.network.values.public_subnets, 0)
-  vpc_security_group_ids = [aws_security_group.clumsy_bird.id]
+  vpc_security_group_ids      = [aws_security_group.clumsy_bird.id]
 
   user_data = templatefile("${path.module}/application-files/deploy_app.sh", {})
 
@@ -107,8 +107,13 @@ resource "aws_instance" "clumsy_bird" {
 
 module "s3_bucket" {
   source        = "terraform-aws-modules/s3-bucket/aws"
-  bucket_prefix = "${var.prefix}-s3-${var.environment}"
+  version       = "~>3.14"
+  bucket_prefix = var.prefix
   acl           = "private"
+
+  control_object_ownership = true
+  object_ownership         = "ObjectWriter"
+
   versioning = {
     enabled = true
   }
