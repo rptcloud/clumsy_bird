@@ -101,9 +101,9 @@ resource "aws_instance" "clumsy_bird" {
 }
 
 module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
+  source        = "terraform-aws-modules/s3-bucket/aws"
   bucket_prefix = "${var.prefix}-s3-${var.environment}"
-  acl    = "private"
+  acl           = "private"
   versioning = {
     enabled = true
   }

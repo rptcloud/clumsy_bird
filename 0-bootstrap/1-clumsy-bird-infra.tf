@@ -36,17 +36,10 @@ resource "tfe_workspace" "clumsy-bird-compute" {
   }
 
   remote_state_consumer_ids = [
-    tfe_workspace.run-triggers-nework.id
+    tfe_workspace.clumsy-bird-network.id
   ]
 
   tag_names = ["multispace:compute"]
-}
-
-resource "tfe_variable" "run-triggers-upstream-b-tfc_org" {
-  category     = "terraform"
-  key          = "tfc_org"
-  value        = var.tfc_org
-  workspace_id = tfe_workspace.run-triggers-upstream-b.id
 }
 
 resource "tfe_variable" "tfc_org" {
@@ -65,13 +58,13 @@ resource "tfe_workspace_run" "compute" {
     # Fire and Forget
     wait_for_run = false
     # auto-apply
-    manual_confirm = yes
+    manual_confirm = true
   }
 
   destroy {
     # Wait for destroy before doing anything else
     wait_for_run = true
     # auto-apply
-    manual_confirm = yes
+    manual_confirm = true
   }
 }

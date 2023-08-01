@@ -3,7 +3,7 @@ terraform {
     organization = "RPTData"
 
     workspaces {
-      name = "clumsy-bird-network"
+      name = "clumsy-bird-bootstrap"
     }
   }
 }

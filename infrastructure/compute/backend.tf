@@ -1,6 +1,6 @@
 terraform {
   cloud {
-    organization = "Mastering-Terraform-Cloud"
+    organization = "RPTData"
 
     workspaces {
       name = "clumsy-bird-compute"
