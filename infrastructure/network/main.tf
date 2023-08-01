@@ -40,7 +40,7 @@ module "vpc" {
 
 resource "tfe_workspace_run" "compute" {
   # workspace_id = tfe_workspace.clumsy-bird-compute.id
-  workspace_id = "ws-6QqLycuKRpFhkZtb"
+  workspace_id = "ws-vZu5Kvx5NzryDkgv"
 
   depends_on = [module.vpc]
 
