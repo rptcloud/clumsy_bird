@@ -17,6 +17,10 @@ resource "tfe_workspace" "clumsy-bird-network" {
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
   }
 
+  remote_state_consumer_ids = [
+    tfe_workspace.clumsy-bird-compute.id
+  ]
+
   tag_names = ["clumsy_bird:network"]
 }
 
@@ -34,10 +38,6 @@ resource "tfe_workspace" "clumsy-bird-compute" {
     ingress_submodules = false
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
   }
-
-  remote_state_consumer_ids = [
-    tfe_workspace.clumsy-bird-network.id
-  ]
 
   tag_names = ["multispace:compute"]
 }
@@ -75,17 +75,6 @@ resource "tfe_workspace_variable_set" "aws-creds-network" {
 resource "tfe_workspace_variable_set" "aws-creds-compute" {
   variable_set_id = tfe_variable_set.aws-creds.id
   workspace_id    = tfe_workspace.clumsy-bird-compute.id
-}
-
-locals {
-  chain_members = [
-    "A", "B", "C"
-  ]
-
-  chain_upstreams = {
-    "B" = ["A"],
-    "C" = ["B"],
-  }
 }
 
 resource "tfe_variable" "compute-upstream-workspaces" {
