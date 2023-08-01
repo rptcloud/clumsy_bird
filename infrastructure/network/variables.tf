@@ -1,3 +1,13 @@
+variable "tfc_org" {
+  type        = string
+  description = "TFC Organization to pull remote state from"
+}
+
+variable "upstream_workspaces" {
+  type    = set(string)
+  default = []
+}
+
 variable "prefix" {
   type        = string
   description = "(Required) This prefix will be included in the name of most resources."

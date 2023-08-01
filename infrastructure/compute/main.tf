@@ -18,9 +18,14 @@ provider "aws" {
   }
 }
 
+# data "tfe_outputs" "network" {
+#   organization = var.tfc_org
+#   workspace    = "clumsy-bird-network"
+# }
+
 data "tfe_outputs" "network" {
-  organization = var.tfc_org
-  workspace    = "clumsy-bird-network"
+  for_each = var.upstream_workspaces
+  workspace = each.key
 }
 
 resource "aws_security_group" "clumsy_bird" {
