@@ -1,12 +1,11 @@
 ## Bootstrap the multi-workspace TFC Pattern
-Bootstrap the multi-workspace TFC Pattern, by applying peforming a TFC Run in this workspace.
+Bootstrap the clumsy bird application infrastructure by applying peforming a TFC Run in this workspace.
 
 ## Bootstrap dependencies:
 
 - Your TFC org must have VCS set up within it to create new workspaces linked to GitHub orgs. The config here assumes exactly one GitHub VCS provider.
 - The bootstrap workspace runs in Terraform Cloud too and requires the variable `TFE_TOKEN` to be set.
-- This workspace is VCS connected against the `0-bootsrap` directory in the `github.com/rptcloud/multispace-example` repository
-- The `github.com/rptcloud/multispace-example` repository is a fork of `https://github.com/hashi-strawb/multispace-example`, with the org name and code repostories updated to use the `RPTData` org and `github.com/rptcloud/multispace-example` repository.
+- This workspace is VCS connected against the `0-bootsrap` directory in the `github.com/rptcloud/clumsy_bird` repository
 
 ## Building and Destroying:
 
