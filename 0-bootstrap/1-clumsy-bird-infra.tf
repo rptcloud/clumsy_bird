@@ -82,7 +82,7 @@ resource "tfe_variable" "compute-upstream-workspaces" {
   category     = "terraform"
   hcl          = true
   key          = "upstream_workspaces"
-  value        = "[tfe_workspace.clumsy-bird-network.id]"
+  value        = "[${tfe_workspace.clumsy-bird-network.id}]"
 }
 
 resource "tfe_workspace_run" "compute" {
