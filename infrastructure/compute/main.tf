@@ -27,7 +27,7 @@ resource "aws_security_group" "clumsy_bird" {
   description = "Clumsy Bird Security Group Access"
   name        = "${var.prefix}-security-group"
 
-  vpc_id = "vpc-01014f6f7c2ad9221"
+  vpc_id = data.tfe_outputs.network.values.vpc-id
 
   ingress {
     from_port   = 80
@@ -95,8 +95,7 @@ resource "aws_instance" "clumsy_bird" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   associate_public_ip_address = true
-  # subnet_id                   = element(data.tfe_outputs.network.values.public_subnets, 0)
-  subnet_id              = "subnet-0f0fb0d93c327518d"
+  subnet_id                   = element(data.tfe_outputs.network.values.public_subnets, 0)
   vpc_security_group_ids = [aws_security_group.clumsy_bird.id]
 
   user_data = templatefile("${path.module}/application-files/deploy_app.sh", {})
