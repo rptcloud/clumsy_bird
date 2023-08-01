@@ -1,2 +1,2 @@
 # clumsy_bird
-Clumsy Bird Application
+Clumsy Birds
