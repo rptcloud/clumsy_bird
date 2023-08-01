@@ -86,10 +86,8 @@ resource "tfe_variable" "compute-upstream-workspaces" {
 }
 
 resource "tfe_workspace_run" "compute" {
-  # workspace_id = tfe_workspace.clumsy-bird-compute.id
-  workspace_id = "ws-vZu5Kvx5NzryDkgv"
-
-  depends_on = [module.vpc]
+  workspace_id = tfe_workspace.clumsy-bird-network.id
+  depends_on = [tfe_workspace.clumsy-bird-network]
 
   apply {
     # Fire and Forget
