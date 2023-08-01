@@ -8,4 +8,5 @@ output "clumsy-bird-ip" {
 
 output "upstream_values" {
   value = data.tfe_outputs.network.values
+  sensitive = true
 }
