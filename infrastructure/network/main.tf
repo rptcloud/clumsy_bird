@@ -38,22 +38,22 @@ module "vpc" {
   }
 }
 
-resource "tfe_workspace_run" "compute" {
-  workspace_id = tfe_workspace.clumsy-bird-compute.id
+# resource "tfe_workspace_run" "compute" {
+#   workspace_id = tfe_workspace.clumsy-bird-compute.id
 
-  depends_on = [module.vpc]
+#   depends_on = [module.vpc]
 
-  apply {
-    # Fire and Forget
-    wait_for_run = false
-    # auto-apply
-    manual_confirm = true
-  }
+#   apply {
+#     # Fire and Forget
+#     wait_for_run = false
+#     # auto-apply
+#     manual_confirm = true
+#   }
 
-  destroy {
-    # Wait for destroy before doing anything else
-    wait_for_run = true
-    # auto-apply
-    manual_confirm = true
-  }
-}
+#   destroy {
+#     # Wait for destroy before doing anything else
+#     wait_for_run = true
+#     # auto-apply
+#     manual_confirm = true
+#   }
+# }
