@@ -55,7 +55,7 @@ resource "tfe_workspace" "chain-runner" {
 
   tag_names = ["multispace:chain-runner"]
 
-  working_directory = "infrstructure/chain"
+  working_directory = "infrastructure/chain"
 
   vcs_repo {
     identifier         = "rptcloud/clumsy_bird"
