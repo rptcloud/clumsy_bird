@@ -42,11 +42,39 @@ resource "tfe_workspace" "clumsy-bird-compute" {
   tag_names = ["multispace:compute"]
 }
 
+resource "tfe_variable_set" "aws-creds" {
+  name = "AWS Creds - Clumsy Bird"
+}
+
 resource "tfe_variable" "tfc_org" {
   category     = "terraform"
   key          = "tfc_org"
   value        = var.tfc_org
   workspace_id = tfe_workspace.clumsy-bird-compute.id
+}
+
+resource "tfe_variable" "aws-creds" {
+  key             = "AWS_ACCESS_KEY_ID"
+  category        = "env"
+  sensitive       = true
+  variable_set_id = tfe_variable_set.aws-creds.id
+}
+
+resource "tfe_variable" "aws-creds-key" {
+  key             = "AWS_SECRET_ACCESS_KEY"
+  category        = "env"
+  sensitive       = true
+  variable_set_id = tfe_variable_set.aws-creds.id
+}
+
+resource "tfe_workspace_variable_set" "aws-creds-network" {
+  variable_set_id = tfe_variable_set.aws-creds.id
+  workspace_id    = tfe_workspace.clumsy-bird-network.id
+}
+
+resource "tfe_workspace_variable_set" "aws-creds-compute" {
+  variable_set_id = tfe_variable_set.aws-creds.id
+  workspace_id    = tfe_workspace.clumsy-bird-compute.id
 }
 
 resource "tfe_workspace_run" "compute" {
