@@ -77,22 +77,21 @@ resource "tfe_workspace_variable_set" "aws-creds-compute" {
   workspace_id    = tfe_workspace.clumsy-bird-compute.id
 }
 
-resource "tfe_workspace_run" "compute" {
+locals {
+  chain_members = [
+    "A", "B", "C"
+  ]
+
+  chain_upstreams = {
+    "B" = ["A"],
+    "C" = ["B"],
+  }
+}
+
+resource "tfe_variable" "compute-upstream-workspaces" {
   workspace_id = tfe_workspace.clumsy-bird-compute.id
-
-  depends_on = [tfe_variable.tfc_org]
-
-  apply {
-    # Fire and Forget
-    wait_for_run = false
-    # auto-apply
-    manual_confirm = true
-  }
-
-  destroy {
-    # Wait for destroy before doing anything else
-    wait_for_run = true
-    # auto-apply
-    manual_confirm = true
-  }
+  category     = "terraform"
+  hcl          = true
+  key          = "upstream_workspaces"
+  value        = "[tfe_workspace.clumsy-bird-network.id]"
 }
