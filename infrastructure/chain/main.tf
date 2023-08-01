@@ -1,11 +1,4 @@
 terraform {
-  cloud {
-    organization = "RPTData"
-
-    workspaces {
-      tags = ["multispace:chain-runner"]
-    }
-  }
   required_providers {
     tfe = {
       source = "hashicorp/tfe"
@@ -23,7 +16,6 @@ variable "tfc_org" {
 provider "tfe" {
   organization = var.tfc_org
 }
-
 
 locals {
   workspaces = [
@@ -65,4 +57,20 @@ resource "tfe_workspace_run" "compute" {
     wait_for_run   = true
     manual_confirm = false
   }
+}
+
+output "clumsy-bird-compute-workspace-name" {
+  value = data.tfe_workspace.ws["clumsy-bird-compute"].name
+}
+
+output "clumsy-bird-compute-workspace-id" {
+  value = data.tfe_workspace.ws["clumsy-bird-compute"].id 
+}
+
+output "clumsy-bird-network-workspace-name" {
+  value = data.tfe_workspace.ws["clumsy-bird-network"].name
+}
+
+output "clumsy-bird-network-workspace-id" {
+  value = data.tfe_workspace.ws["clumsy-bird-network"].id 
 }
