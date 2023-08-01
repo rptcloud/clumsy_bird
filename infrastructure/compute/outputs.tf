@@ -6,6 +6,6 @@ output "clumsy-bird-ip" {
   value = "http://${aws_eip.clumsy_bird.public_ip}:8001"
 }
 
-output "appliation-file-path" {
-  value = "${path.module}/application-files/deploy_app.sh"
+output "upstream_values" {
+  value = data.tfe_outputs.network.values
 }
