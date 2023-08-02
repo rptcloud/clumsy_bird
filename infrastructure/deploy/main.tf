@@ -33,6 +33,10 @@ data "tfe_outputs" "workspaces" {
   organization = var.tfc_org
   for_each     = toset(local.workspaces)
   workspace    = each.key
+  depends_on = [
+    tfe_workspace_run.network,
+    tfe_workspace_run.compute,
+  ]
 }
 
 resource "tfe_workspace_run" "network" {
