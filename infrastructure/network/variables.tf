@@ -1,3 +1,8 @@
+variable "tfc_org" {
+  type        = string
+  description = "TFC Organization to pull remote state from"
+}
+
 variable "upstream_workspaces" {
   type    = set(string)
   default = []
