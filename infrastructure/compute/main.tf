@@ -27,6 +27,7 @@ locals {
 }
 
 data "tfe_workspace" "workspaces" {
+  organization = var.tfc_org
   for_each = toset(local.workspaces)
   name     = each.key
 }
