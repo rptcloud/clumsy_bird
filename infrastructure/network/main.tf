@@ -11,9 +11,18 @@ provider "aws" {
   region = var.region
 }
 
+locals {
+  workspaces = [
+    "clumsy-bird-label",
+    "clumsy-bird-network",
+    "clumsy-bird-compute",
+  ]
+}
+
 data "tfe_outputs" "workspaces" {
   organization = var.tfc_org
-  for_each     = var.upstream_workspaces
+  # for_each     = var.upstream_workspaces
+  for_each     = toset(local.workspaces)
   workspace    = each.key
 }
 
