@@ -17,11 +17,16 @@ data "tfe_outputs" "workspaces" {
   workspace    = each.key
 }
 
+locals {
+  id   = data.tfe_outputs.workspaces["clumsy-bird-label"].values.id
+  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~>5.1"
 
-  name = "my-vpc-${var.environment}"
+  name = "my-vpc-${local.id}"
   cidr = "10.0.0.0/16"
 
   azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
@@ -31,5 +36,5 @@ module "vpc" {
   enable_nat_gateway = false
   enable_vpn_gateway = false
 
-  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+  tags = local.tags
 }
