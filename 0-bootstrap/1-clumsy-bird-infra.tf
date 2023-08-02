@@ -47,7 +47,7 @@ resource "tfe_workspace" "clumsy-bird-compute" {
 }
 
 resource "tfe_workspace" "chain-runner" {
-  name           = "clumsy-bird-chain-runner"
+  name           = "clumsy-bird-deploy-app"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
@@ -55,7 +55,7 @@ resource "tfe_workspace" "chain-runner" {
 
   tag_names = ["multispace:chain-runner"]
 
-  working_directory = "infrastructure/chain"
+  working_directory = "infrastructure/deploy"
 
   vcs_repo {
     identifier         = "rptcloud/clumsy_bird"
