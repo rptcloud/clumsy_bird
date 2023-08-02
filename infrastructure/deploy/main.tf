@@ -19,6 +19,7 @@ provider "tfe" {
 
 locals {
   workspaces = [
+    "clumsy-bird-label",
     "clumsy-bird-network",
     "clumsy-bird-compute",
   ]
@@ -34,13 +35,31 @@ data "tfe_outputs" "workspaces" {
   for_each     = toset(local.workspaces)
   workspace    = each.key
   depends_on = [
+    tfe_workspace_run.label,
     tfe_workspace_run.network,
     tfe_workspace_run.compute,
   ]
 }
 
+resource "tfe_workspace_run" "label" {
+  workspace_id = data.tfe_workspace.ws["clumsy-bird-network"].id
+
+  apply {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+
+  destroy {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+}
+
 resource "tfe_workspace_run" "network" {
   workspace_id = data.tfe_workspace.ws["clumsy-bird-network"].id
+
+  # Use depends on to determine the order that workspaces are chained together
+  depends_on = [tfe_workspace_run.label]
 
   apply {
     wait_for_run   = true

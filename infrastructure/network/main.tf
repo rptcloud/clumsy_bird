@@ -9,13 +9,12 @@ terraform {
 
 provider "aws" {
   region = var.region
-  default_tags {
-    tags = {
-      Owner       = var.owner
-      Project     = var.project
-      Environment = var.environment
-    }
-  }
+}
+
+data "tfe_outputs" "workspaces" {
+  organization = var.tfc_org
+  for_each     = var.upstream_workspaces
+  workspace    = each.key
 }
 
 module "vpc" {
@@ -32,8 +31,5 @@ module "vpc" {
   enable_nat_gateway = false
   enable_vpn_gateway = false
 
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
+  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
 }

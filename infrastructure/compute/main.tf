@@ -9,13 +9,6 @@ terraform {
 
 provider "aws" {
   region = var.region
-  default_tags {
-    tags = {
-      Owner       = var.owner
-      Project     = var.project
-      Environment = var.environment
-    }
-  }
 }
 
 data "tfe_outputs" "workspaces" {
@@ -24,9 +17,14 @@ data "tfe_outputs" "workspaces" {
   workspace    = each.key
 }
 
+locals {
+  id   = data.tfe_outputs.workspaces["clumsy-bird-label"].values.id
+  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+}
+
 resource "aws_security_group" "clumsy_bird" {
   description = "Clumsy Bird Security Group Access"
-  name        = "${var.prefix}-security-group"
+  name        = "${local.id}-security-group"
 
   vpc_id = data.tfe_outputs.workspaces["clumsy-bird-network"].values.vpc-id
 
@@ -58,9 +56,7 @@ resource "aws_security_group" "clumsy_bird" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "${var.prefix}-security-group"
-  }
+  tags = local.tags
 }
 
 data "aws_ami" "ubuntu" {
@@ -82,9 +78,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_eip" "clumsy_bird" {
   instance = aws_instance.clumsy_bird.id
   domain   = "vpc"
-  tags = {
-    "Name" = "${var.prefix}-${var.project}-${var.environment}"
-  }
+  tags     = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
 }
 
 resource "aws_eip_association" "clumsy_bird" {
@@ -101,15 +95,13 @@ resource "aws_instance" "clumsy_bird" {
 
   user_data = templatefile("${path.module}/application-files/deploy_app.sh", {})
 
-  tags = {
-    Name = "${var.prefix}-${var.project}-${var.environment}-instance"
-  }
+  tags = local.tags
 }
 
 module "s3_bucket" {
   source        = "terraform-aws-modules/s3-bucket/aws"
   version       = "~>3.14"
-  bucket_prefix = var.prefix
+  bucket_prefix = local.id
   acl           = "private"
 
   control_object_ownership = true
@@ -118,4 +110,6 @@ module "s3_bucket" {
   versioning = {
     enabled = true
   }
+
+  tags = local.tags
 }

@@ -1,0 +1,5 @@
+namespace     = "rpt"
+environment   = "demo"
+stage         = "dev"
+name          = "clumsy-bird"
+business_unit = "IT"
