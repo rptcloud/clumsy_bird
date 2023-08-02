@@ -29,6 +29,12 @@ data "tfe_workspace" "ws" {
   name     = each.key
 }
 
+data "tfe_outputs" "workspaces" {
+  organization = var.tfc_org
+  for_each     = toset(local.workspaces)
+  workspace    = each.key
+}
+
 resource "tfe_workspace_run" "network" {
   workspace_id = data.tfe_workspace.ws["clumsy-bird-network"].id
 

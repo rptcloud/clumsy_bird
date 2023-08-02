@@ -3,7 +3,7 @@ terraform {
     organization = "RPTData"
 
     workspaces {
-      name = "clumsy-bird-chain-runner"
+      name = "clumsy-bird-app-deploy"
     }
   }
 }
