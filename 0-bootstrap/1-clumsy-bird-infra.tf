@@ -99,11 +99,15 @@ resource "tfe_variable_set" "aws-creds" {
   name = "AWS Creds - Clumsy Bird"
 }
 
+resource "tfe_variable_set" "tfc-org" {
+  name = "App Specific - Clumsy Bird"
+}
+
 resource "tfe_variable" "tfc_org" {
-  category     = "terraform"
-  key          = "tfc_org"
-  value        = var.tfc_org
-  workspace_id = tfe_workspace.clumsy-bird-compute.id
+  category        = "terraform"
+  key             = "tfc_org"
+  value           = var.tfc_org
+  variable_set_id = tfe_variable_set.tfc-org.id
 }
 
 resource "tfe_variable" "aws-creds" {
@@ -127,6 +131,16 @@ resource "tfe_workspace_variable_set" "aws-creds-network" {
 
 resource "tfe_workspace_variable_set" "aws-creds-compute" {
   variable_set_id = tfe_variable_set.aws-creds.id
+  workspace_id    = tfe_workspace.clumsy-bird-compute.id
+}
+
+resource "tfe_workspace_variable_set" "app-config-network" {
+  variable_set_id = tfe_variable_set.tfc-org.id
+  workspace_id    = tfe_workspace.clumsy-bird-network.id
+}
+
+resource "tfe_workspace_variable_set" "app-config-compute" {
+  variable_set_id = tfe_variable_set.tfc-org.id
   workspace_id    = tfe_workspace.clumsy-bird-compute.id
 }
 
