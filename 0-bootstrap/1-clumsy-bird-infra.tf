@@ -22,7 +22,8 @@ resource "tfe_workspace" "clumsy-bird-network" {
   }
 
   remote_state_consumer_ids = [
-    tfe_workspace.clumsy-bird-compute.id
+    tfe_workspace.chain-runner.id,
+    tfe_workspace.clumsy-bird-compute.id,
   ]
 
   tag_names = ["clumsy_bird:network"]
@@ -42,6 +43,10 @@ resource "tfe_workspace" "clumsy-bird-compute" {
     ingress_submodules = false
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
   }
+
+  remote_state_consumer_ids = [
+    tfe_workspace.chain-runner.id
+  ]
 
   tag_names = ["multispace:compute"]
 }
@@ -121,6 +126,6 @@ resource "tfe_variable" "chain-runner-tfc_org" {
 resource "tfe_variable" "chain-runner-tfe-token" {
   category     = "env"
   key          = "TFE_TOKEN"
-  sensitive       = true 
+  sensitive    = true
   workspace_id = tfe_workspace.chain-runner.id
 }
