@@ -42,7 +42,7 @@ data "tfe_outputs" "workspaces" {
 }
 
 resource "tfe_workspace_run" "label" {
-  workspace_id = data.tfe_workspace.ws["clumsy-bird-network"].id
+  workspace_id = data.tfe_workspace.ws["clumsy-bird-label"].id
 
   apply {
     wait_for_run   = true
