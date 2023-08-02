@@ -1,4 +1,5 @@
-# Chain Runner
+# App Deployment Workspaces uing Chain Runner Pattern
+You can safely deploy or destroy the infrastructure for the application by peforming an apply or destroy within this workspace.  This workspace is configured to manage the dependencies between the application workspaces and will run the required workspaces in the correct order.
 
 ## Create Infrastructure
 - Update the `AWS Creds - Clumsy Bird` Variable Set to include the correct AWS Credentials.
