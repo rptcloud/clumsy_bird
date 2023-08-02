@@ -7,6 +7,30 @@ resource "tfe_project" "clumsy_bird" {
 ## Creating Workspaces
 
 resource "tfe_workspace" "clumsy-bird-network" {
+  name           = "clumsy-bird-label"
+  auto_apply     = true
+  queue_all_runs = false
+  force_delete   = true
+  project_id     = tfe_project.clumsy_bird.id
+
+  working_directory = "infrastructure/label"
+
+  vcs_repo {
+    identifier         = "rptcloud/clumsy_bird"
+    ingress_submodules = false
+    oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
+  }
+
+  remote_state_consumer_ids = [
+    tfe_workspace.chain-runner.id,
+    tfe_workspace.clumsy-bird-network.id,
+    tfe_workspace.clumsy-bird-compute.id,
+  ]
+
+  tag_names = ["clumsy_bird:label"]
+}
+
+resource "tfe_workspace" "clumsy-bird-network" {
   name           = "clumsy-bird-network"
   auto_apply     = true
   queue_all_runs = false
@@ -48,7 +72,7 @@ resource "tfe_workspace" "clumsy-bird-compute" {
     tfe_workspace.chain-runner.id
   ]
 
-  tag_names = ["multispace:compute"]
+  tag_names = ["clumsy_bird:compute"]
 }
 
 resource "tfe_workspace" "chain-runner" {
@@ -58,8 +82,6 @@ resource "tfe_workspace" "chain-runner" {
   force_delete   = true
   project_id     = tfe_project.clumsy_bird.id
 
-  tag_names = ["multispace:chain-runner"]
-
   working_directory = "infrastructure/deploy"
 
   vcs_repo {
@@ -67,6 +89,8 @@ resource "tfe_workspace" "chain-runner" {
     ingress_submodules = false
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
   }
+
+  tag_names = ["clumsy_bird:deployment-runner"]
 }
 
 ## Creating Variables and Variable Sets
