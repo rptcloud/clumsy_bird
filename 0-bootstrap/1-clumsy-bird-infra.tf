@@ -47,7 +47,7 @@ resource "tfe_workspace" "clumsy-bird-compute" {
 }
 
 resource "tfe_workspace" "chain-runner" {
-  name           = "clumsy-bird-deploy-app"
+  name           = "clumsy-bird-app-deploy"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
