@@ -6,7 +6,7 @@ resource "tfe_project" "clumsy_bird" {
 
 ## Creating Workspaces
 
-resource "tfe_workspace" "clumsy-bird-network" {
+resource "tfe_workspace" "clumsy-bird-label" {
   name           = "clumsy-bird-label"
   auto_apply     = true
   queue_all_runs = false
