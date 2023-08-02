@@ -117,3 +117,10 @@ resource "tfe_variable" "chain-runner-tfc_org" {
   value        = var.tfc_org
   workspace_id = tfe_workspace.chain-runner.id
 }
+
+resource "tfe_variable" "chain-runner-tfe-token" {
+  category     = "env"
+  key          = "TFE_TOKEN"
+  sensitive       = true 
+  workspace_id = tfe_workspace.chain-runner.id
+}
