@@ -46,6 +46,7 @@ resource "tfe_workspace_run" "network" {
 resource "tfe_workspace_run" "compute" {
   workspace_id = data.tfe_workspace.ws["clumsy-bird-compute"].id
 
+  # Use depends on to determine the order that workspaces are chained together
   depends_on = [tfe_workspace_run.network]
 
   apply {

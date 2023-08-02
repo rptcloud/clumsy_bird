@@ -1,3 +1,3 @@
-prefix        = "app"
-project       = "clumsy-bird"
-environment   = "development"
+prefix      = "app"
+project     = "clumsy-bird"
+environment = "development"

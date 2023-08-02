@@ -3,7 +3,7 @@ output "clumsy-bird-compute-workspace-name" {
 }
 
 output "clumsy-bird-compute-workspace-id" {
-  value = data.tfe_workspace.ws["clumsy-bird-compute"].id 
+  value = data.tfe_workspace.ws["clumsy-bird-compute"].id
 }
 
 output "clumsy-bird-network-workspace-name" {
@@ -11,5 +11,5 @@ output "clumsy-bird-network-workspace-name" {
 }
 
 output "clumsy-bird-network-workspace-id" {
-  value = data.tfe_workspace.ws["clumsy-bird-network"].id 
+  value = data.tfe_workspace.ws["clumsy-bird-network"].id
 }
