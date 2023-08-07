@@ -3,13 +3,13 @@ output "clumsy-bird-workspace-names" {
 }
 
 output "clumsy-bird-url" {
-  value = data.tfe_outputs.workspaces["clumsy-bird-compute"].nonsensitive_values.clumsy-bird-url
+  value = data.tfe_outputs.workspaces["clumsy-bird-compute-${var.environment}"].nonsensitive_values.clumsy-bird-url
 }
 
 output "clumsy-bird-ip" {
-  value = data.tfe_outputs.workspaces["clumsy-bird-compute"].nonsensitive_values.clumsy-bird-ip
+  value = data.tfe_outputs.workspaces["clumsy-bird-compute-${var.environment}"].nonsensitive_values.clumsy-bird-ip
 }
 
 output "s3_bucket" {
-  value = data.tfe_outputs.workspaces["clumsy-bird-compute"].nonsensitive_values.s3_bucket
+  value = data.tfe_outputs.workspaces["clumsy-bird-compute-${var.environment}"].nonsensitive_values.s3_bucket
 }
