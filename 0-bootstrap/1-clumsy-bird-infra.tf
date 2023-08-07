@@ -105,7 +105,8 @@ resource "tfe_variable_set" "aws-creds" {
 }
 
 resource "tfe_variable_set" "tfc-org" {
-  name = "App Specific - Clumsy Bird"
+  for_each = var.environments
+  name     = "App Specific - Clumsy Bird - ${each.value}"
 }
 
 resource "tfe_variable" "tfc_org" {
@@ -113,7 +114,7 @@ resource "tfe_variable" "tfc_org" {
   category        = "terraform"
   key             = "tfc_org"
   value           = var.tfc_org
-  variable_set_id = tfe_variable_set.tfc-org.id
+  variable_set_id = tfe_variable_set.tfc-org["${each.value}"].id
 }
 
 resource "tfe_variable" "environment" {
@@ -121,7 +122,7 @@ resource "tfe_variable" "environment" {
   category        = "terraform"
   key             = "environment"
   value           = each.value
-  variable_set_id = tfe_variable_set.tfc-org.id
+  variable_set_id = tfe_variable_set.tfc-org["${each.value}"].id
 }
 
 resource "tfe_variable" "aws-creds" {
