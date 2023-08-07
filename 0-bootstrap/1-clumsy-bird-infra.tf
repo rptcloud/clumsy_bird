@@ -116,6 +116,14 @@ resource "tfe_variable" "tfc_org" {
   variable_set_id = tfe_variable_set.tfc-org.id
 }
 
+resource "tfe_variable" "environment" {
+  for_each        = var.environments
+  category        = "terraform"
+  key             = "environment"
+  value           = each.value
+  variable_set_id = tfe_variable_set.tfc-org.id
+}
+
 resource "tfe_variable" "aws-creds" {
   for_each        = var.environments
   key             = "AWS_ACCESS_KEY_ID"
