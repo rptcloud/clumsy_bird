@@ -18,11 +18,6 @@ data "tfe_outputs" "workspaces" {
   workspace    = each.key
 }
 
-variable "environment" {
-  description = "environment to deploy to"
-  type        = string
-  default     = "development"
-}
 
 locals {
   workspaces = [

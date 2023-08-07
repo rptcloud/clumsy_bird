@@ -11,12 +11,6 @@ provider "aws" {
   region = var.region
 }
 
-variable "environment" {
-  description = "environment to deploy to"
-  type        = string
-  default     = "development"
-}
-
 locals {
   workspaces = [
     "clumsy-bird-label-${var.environment}",

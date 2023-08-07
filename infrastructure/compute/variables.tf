@@ -14,6 +14,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "environment" {
+  description = "environment to deploy to"
+  type        = string
+  default     = "development"
+}
+
 variable "instance_type" {
   type        = string
   description = "(Optional) Specifies the AWS instance type. Defaults to t2.micro."
