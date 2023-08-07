@@ -132,6 +132,12 @@ resource "tfe_variable" "aws-creds-key" {
   variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
 }
 
+resource "tfe_workspace_variable_set" "aws-creds-deploy" {
+  for_each        = var.environments
+  variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
+  workspace_id    = tfe_workspace.clumsy-bird-deploy["${each.value}"].id
+}
+
 resource "tfe_workspace_variable_set" "aws-creds-network" {
   for_each        = var.environments
   variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
