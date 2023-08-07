@@ -17,11 +17,17 @@ provider "tfe" {
   organization = var.tfc_org
 }
 
+variable "environment" {
+  description = "environment to deploy to"
+  type        = string
+  default     = "development"
+}
+
 locals {
   workspaces = [
-    "clumsy-bird-label",
-    "clumsy-bird-network",
-    "clumsy-bird-compute",
+    "clumsy-bird-label-${var.environment}",
+    "clumsy-bird-network-${var.environment}",
+    "clumsy-bird-compute-${var.environment}",
   ]
 }
 
