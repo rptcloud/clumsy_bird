@@ -14,8 +14,8 @@ provider "aws" {
 data "tfe_outputs" "workspaces" {
   organization = var.tfc_org
   # for_each     = var.upstream_workspaces
-  for_each     = toset(local.workspaces)
-  workspace    = each.key
+  for_each  = toset(local.workspaces)
+  workspace = each.key
 }
 
 
@@ -25,12 +25,18 @@ locals {
     "clumsy-bird-network-${var.environment}",
     "clumsy-bird-compute-${var.environment}",
   ]
+  workspaces_names = {
+    "deploy"  = "clumsy-bird-deploy-${var.environment}"
+    "label"   = "clumsy-bird-label-${var.environment}"
+    "network" = "clumsy-bird-network-${var.environment}"
+    "compute" = "clumsy-bird-compute-${var.environment}"
+  }
 }
 
 data "tfe_workspace" "workspaces" {
   organization = var.tfc_org
-  for_each = toset(local.workspaces)
-  name     = each.key
+  for_each     = toset(local.workspaces)
+  name         = each.key
 }
 
 locals {
