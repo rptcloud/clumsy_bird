@@ -161,13 +161,13 @@ resource "tfe_workspace_variable_set" "aws-creds-compute" {
 
 resource "tfe_workspace_variable_set" "app-config-network" {
   for_each        = var.environments
-  variable_set_id = tfe_variable_set.tfc-org.id
+  variable_set_id = tfe_variable_set.tfc-org["${each.value}"].id
   workspace_id    = tfe_workspace.clumsy-bird-network["${each.value}"].id
 }
 
 resource "tfe_workspace_variable_set" "app-config-compute" {
   for_each        = var.environments
-  variable_set_id = tfe_variable_set.tfc-org.id
+  variable_set_id = tfe_variable_set.tfc-org["${each.value}"].id
   workspace_id    = tfe_workspace.clumsy-bird-compute["${each.value}"].id
 }
 
