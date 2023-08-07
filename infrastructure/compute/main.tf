@@ -18,11 +18,17 @@ data "tfe_outputs" "workspaces" {
   workspace    = each.key
 }
 
+variable "environment" {
+  description = "environment to deploy to"
+  type        = string
+  default     = "development"
+}
+
 locals {
   workspaces = [
-    "clumsy-bird-label",
-    "clumsy-bird-network",
-    "clumsy-bird-compute",
+    "clumsy-bird-label-${var.environment}",
+    "clumsy-bird-network-${var.environment}",
+    "clumsy-bird-compute-${var.environment}",
   ]
 }
 
@@ -33,15 +39,15 @@ data "tfe_workspace" "workspaces" {
 }
 
 locals {
-  id   = data.tfe_outputs.workspaces["clumsy-bird-label"].values.id
-  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+  id   = data.tfe_outputs.workspaces["clumsy-bird-label-${var.environment}"].values.id
+  tags = data.tfe_outputs.workspaces["clumsy-bird-label-${var.environment}"].values.tags
 }
 
 resource "aws_security_group" "clumsy_bird" {
   description = "Clumsy Bird Security Group Access"
   name        = "${local.id}-security-group"
 
-  vpc_id = data.tfe_outputs.workspaces["clumsy-bird-network"].values.vpc-id
+  vpc_id = data.tfe_outputs.workspaces["clumsy-bird-network-${var.environment}"].values.vpc-id
 
   ingress {
     from_port   = 80
@@ -93,7 +99,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_eip" "clumsy_bird" {
   instance = aws_instance.clumsy_bird.id
   domain   = "vpc"
-  tags     = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+  tags     = data.tfe_outputs.workspaces["clumsy-bird-label-${var.environment}"].values.tags
 }
 
 resource "aws_eip_association" "clumsy_bird" {
@@ -105,7 +111,7 @@ resource "aws_instance" "clumsy_bird" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   associate_public_ip_address = true
-  subnet_id                   = element(data.tfe_outputs.workspaces["clumsy-bird-network"].values.public_subnets, 0)
+  subnet_id                   = element(data.tfe_outputs.workspaces["clumsy-bird-network-${var.environment}"].values.public_subnets, 0)
   vpc_security_group_ids      = [aws_security_group.clumsy_bird.id]
 
   user_data = templatefile("${path.module}/application-files/deploy_app.sh", {})

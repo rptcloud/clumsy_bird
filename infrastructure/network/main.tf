@@ -11,11 +11,17 @@ provider "aws" {
   region = var.region
 }
 
+variable "environment" {
+  description = "environment to deploy to"
+  type        = string
+  default     = "development"
+}
+
 locals {
   workspaces = [
-    "clumsy-bird-label",
-    "clumsy-bird-network",
-    "clumsy-bird-compute",
+    "clumsy-bird-label-${var.environment}",
+    "clumsy-bird-network-${var.environment}",
+    "clumsy-bird-compute-${var.environment}",
   ]
 }
 
@@ -27,8 +33,8 @@ data "tfe_outputs" "workspaces" {
 }
 
 locals {
-  id   = data.tfe_outputs.workspaces["clumsy-bird-label"].values.id
-  tags = data.tfe_outputs.workspaces["clumsy-bird-label"].values.tags
+  id   = data.tfe_outputs.workspaces["clumsy-bird-label-${var.environment}"].values.id
+  tags = data.tfe_outputs.workspaces["clumsy-bird-label-${var.environment}"].values.tags
 }
 
 module "vpc" {
