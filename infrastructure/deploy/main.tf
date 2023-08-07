@@ -13,14 +13,12 @@ variable "tfc_org" {
   type = string
 }
 
-provider "tfe" {
-  organization = var.tfc_org
+provider "aws" {
+  region = var.region
 }
 
-variable "environment" {
-  description = "environment to deploy to"
-  type        = string
-  default     = "development"
+provider "tfe" {
+  organization = var.tfc_org
 }
 
 locals {
