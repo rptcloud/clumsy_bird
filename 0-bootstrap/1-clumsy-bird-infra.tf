@@ -7,7 +7,8 @@ resource "tfe_project" "clumsy_bird" {
 ## Creating Workspaces
 
 resource "tfe_workspace" "clumsy-bird-label" {
-  name           = "clumsy-bird-label"
+  for_each       = var.environments
+  name           = "clumsy-bird-label-${each.value}"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
@@ -22,16 +23,17 @@ resource "tfe_workspace" "clumsy-bird-label" {
   }
 
   remote_state_consumer_ids = [
-    tfe_workspace.chain-runner.id,
-    tfe_workspace.clumsy-bird-network.id,
-    tfe_workspace.clumsy-bird-compute.id,
+    tfe_workspace.chain-runner["${each.value}"].id,
+    tfe_workspace.clumsy-bird-network["${each.value}"].id,
+    tfe_workspace.clumsy-bird-compute["${each.value}"].id,
   ]
 
-  tag_names = ["clumsy_bird:label"]
+  tag_names = ["clumsy_bird:${each.value}:label"]
 }
 
 resource "tfe_workspace" "clumsy-bird-network" {
-  name           = "clumsy-bird-network"
+  for_each       = var.environments
+  name           = "clumsy-bird-network-${each.value}"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
@@ -46,15 +48,16 @@ resource "tfe_workspace" "clumsy-bird-network" {
   }
 
   remote_state_consumer_ids = [
-    tfe_workspace.chain-runner.id,
-    tfe_workspace.clumsy-bird-compute.id,
+    tfe_workspace.chain-runner["${each.value}"].id,
+    tfe_workspace.clumsy-bird-compute["${each.value}"].id,
   ]
 
-  tag_names = ["clumsy_bird:network"]
+  tag_names = ["clumsy_bird:${each.value}:network"]
 }
 
 resource "tfe_workspace" "clumsy-bird-compute" {
-  name           = "clumsy-bird-compute"
+  for_each       = var.environments
+  name           = "clumsy-bird-compute-${each.value}"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
@@ -69,14 +72,15 @@ resource "tfe_workspace" "clumsy-bird-compute" {
   }
 
   remote_state_consumer_ids = [
-    tfe_workspace.chain-runner.id
+    tfe_workspace.chain-runner["${each.value}"].id
   ]
 
-  tag_names = ["clumsy_bird:compute"]
+  tag_names = ["clumsy_bird:${each.value}:compute"]
 }
 
 resource "tfe_workspace" "chain-runner" {
-  name           = "clumsy-bird-app-deploy"
+  for_each       = var.environments
+  name           = "clumsy-bird-app-deploy-${each.value}"
   auto_apply     = true
   queue_all_runs = false
   force_delete   = true
@@ -90,13 +94,14 @@ resource "tfe_workspace" "chain-runner" {
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
   }
 
-  tag_names = ["clumsy_bird:deployment-runner"]
+  tag_names = ["clumsy_bird:${each.value}:deployment-runner"]
 }
 
 ## Creating Variables and Variable Sets
 
 resource "tfe_variable_set" "aws-creds" {
-  name = "AWS Creds - Clumsy Bird"
+  for_each = var.environments
+  name     = "AWS Creds - Clumsy Bird - ${each.value}"
 }
 
 resource "tfe_variable_set" "tfc-org" {
@@ -104,6 +109,7 @@ resource "tfe_variable_set" "tfc-org" {
 }
 
 resource "tfe_variable" "tfc_org" {
+  for_each        = var.environments
   category        = "terraform"
   key             = "tfc_org"
   value           = var.tfc_org
@@ -111,59 +117,68 @@ resource "tfe_variable" "tfc_org" {
 }
 
 resource "tfe_variable" "aws-creds" {
+  for_each        = var.environments
   key             = "AWS_ACCESS_KEY_ID"
   category        = "env"
   sensitive       = true
-  variable_set_id = tfe_variable_set.aws-creds.id
+  variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
 }
 
 resource "tfe_variable" "aws-creds-key" {
+  for_each        = var.environments
   key             = "AWS_SECRET_ACCESS_KEY"
   category        = "env"
   sensitive       = true
-  variable_set_id = tfe_variable_set.aws-creds.id
+  variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
 }
 
 resource "tfe_workspace_variable_set" "aws-creds-network" {
-  variable_set_id = tfe_variable_set.aws-creds.id
-  workspace_id    = tfe_workspace.clumsy-bird-network.id
+  for_each        = var.environments
+  variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
+  workspace_id    = tfe_workspace.clumsy-bird-network["${each.value}"].id
 }
 
 resource "tfe_workspace_variable_set" "aws-creds-compute" {
-  variable_set_id = tfe_variable_set.aws-creds.id
-  workspace_id    = tfe_workspace.clumsy-bird-compute.id
+  for_each        = var.environments
+  variable_set_id = tfe_variable_set.aws-creds["${each.value}"].id
+  workspace_id    = tfe_workspace.clumsy-bird-compute["${each.value}"].id
 }
 
 resource "tfe_workspace_variable_set" "app-config-network" {
+  for_each        = var.environments
   variable_set_id = tfe_variable_set.tfc-org.id
-  workspace_id    = tfe_workspace.clumsy-bird-network.id
+  workspace_id    = tfe_workspace.clumsy-bird-network["${each.value}"].id
 }
 
 resource "tfe_workspace_variable_set" "app-config-compute" {
+  for_each        = var.environments
   variable_set_id = tfe_variable_set.tfc-org.id
-  workspace_id    = tfe_workspace.clumsy-bird-compute.id
+  workspace_id    = tfe_workspace.clumsy-bird-compute["${each.value}"].id
 }
 
 resource "tfe_variable" "compute-upstream-workspaces" {
-  workspace_id = tfe_workspace.clumsy-bird-compute.id
+  for_each     = var.environments
+  workspace_id = tfe_workspace.clumsy-bird-compute["${each.value}"].id
   category     = "terraform"
   hcl          = true
   key          = "upstream_workspaces"
   value = jsonencode([
-    "${tfe_workspace.clumsy-bird-network.name}",
+    "${tfe_workspace.clumsy-bird-network["${each.value}"].name}",
   ])
 }
 
 resource "tfe_variable" "chain-runner-tfc_org" {
+  for_each     = var.environments
   category     = "terraform"
   key          = "tfc_org"
   value        = var.tfc_org
-  workspace_id = tfe_workspace.chain-runner.id
+  workspace_id = tfe_workspace.chain-runner["${each.value}"].id
 }
 
 resource "tfe_variable" "chain-runner-tfe-token" {
+  for_each     = var.environments
   category     = "env"
   key          = "TFE_TOKEN"
   sensitive    = true
-  workspace_id = tfe_workspace.chain-runner.id
+  workspace_id = tfe_workspace.chain-runner["${each.value}"].id
 }
