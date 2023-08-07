@@ -5,5 +5,5 @@ variable "tfc_org" {
 variable "environments" {
   description = "environments to bootstrap"
   type        = set(string)
-  default     = ["development"]
+  default     = ["development", "production"]
 }
