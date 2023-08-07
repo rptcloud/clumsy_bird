@@ -48,7 +48,7 @@ data "tfe_outputs" "workspaces" {
 }
 
 resource "tfe_workspace_run" "label" {
-  workspace_id = data.tfe_workspace.ws["clumsy-bird-label"].id
+  workspace_id = data.tfe_workspace.ws["clumsy-bird-label-${var.environment}"].id
 
   apply {
     wait_for_run   = true
@@ -62,7 +62,7 @@ resource "tfe_workspace_run" "label" {
 }
 
 resource "tfe_workspace_run" "network" {
-  workspace_id = data.tfe_workspace.ws["clumsy-bird-network"].id
+  workspace_id = data.tfe_workspace.ws["clumsy-bird-network-${var.environment}"].id
 
   # Use depends on to determine the order that workspaces are chained together
   depends_on = [tfe_workspace_run.label]
@@ -79,7 +79,7 @@ resource "tfe_workspace_run" "network" {
 }
 
 resource "tfe_workspace_run" "compute" {
-  workspace_id = data.tfe_workspace.ws["clumsy-bird-compute"].id
+  workspace_id = data.tfe_workspace.ws["clumsy-bird-compute-${var.environment}"].id
 
   # Use depends on to determine the order that workspaces are chained together
   depends_on = [tfe_workspace_run.network]
