@@ -21,17 +21,23 @@ provider "tfe" {
   organization = var.tfc_org
 }
 
+# Workspaces making up the stack
 locals {
   workspaces = [
     "clumsy-bird-label-${var.environment}",
     "clumsy-bird-network-${var.environment}",
     "clumsy-bird-compute-${var.environment}",
   ]
+  workspaces_stack = {
+    "label"   = "clumsy-bird-label-${var.environment}"
+    "network" = "clumsy-bird-network-${var.environment}"
+    "compute" = "clumsy-bird-compute-${var.environment}"
+  }
 }
 
 data "tfe_workspace" "ws" {
   for_each = toset(local.workspaces)
-  name     = each.key
+  name     = each.value
 }
 
 data "tfe_outputs" "workspaces" {
@@ -47,7 +53,7 @@ data "tfe_outputs" "workspaces" {
 
 resource "tfe_workspace_run" "label" {
   workspace_id = data.tfe_workspace.ws["clumsy-bird-label-${var.environment}"].id
-
+  
   apply {
     wait_for_run   = true
     manual_confirm = false

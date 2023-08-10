@@ -1,6 +1,6 @@
-output "clumsy-bird-workspace-names" {
-  value = [for p in local.workspaces : data.tfe_workspace.ws[p].name]
-}
+# output "clumsy-bird-workspace-names" {
+#   value = [for p in local.workspaces : data.tfe_workspace.ws[p].name]
+# }
 
 output "clumsy-bird-url" {
   value = data.tfe_outputs.workspaces["clumsy-bird-compute-${var.environment}"].nonsensitive_values.clumsy-bird-url
