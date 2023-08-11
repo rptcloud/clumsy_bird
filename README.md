@@ -17,7 +17,7 @@ Bootstrap the TFC infrastructure by applying a TFC Run in the workspace - `clums
 - Inside TFC first apply the `clumsy-bird-app-deploy` workspace and this will trigger the `clumsy-bird-network` and `clumsy-bird-compute` workspaces.
 - You can manage the compute independently of the network, but changes in the network will trigger changes in the compute environment.
 
-> Note: If running in a free-tier Terraform Cloud, you will need to switch the "clumsy-bird-app-deploy-development" workspace to run in local mode, otherwise you will hit the 1-run concurrency limit.
+- Note: If running in a free-tier Terraform Cloud, you will need to switch the "clumsy-bird-app-deploy-development" workspace to run in local mode, otherwise you will hit the 1-run concurrency limit.
 
 ## Building and Destroying:
 
